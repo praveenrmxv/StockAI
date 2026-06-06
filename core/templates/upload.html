@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Upload CSV</h2>
+{% if error %} 
+    <div class="alert alert-danger"> {{ error }} 
+
+    </div> 
+    {% endif %} 
+    {% if success %} 
+    <div class="alert alert-success">
+         {{ success }} 
+    </div>
+     {% endif %}
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="file">
+    <button class="btn btn-success">Upload</button>
+</form>
+
+{% endblock %}

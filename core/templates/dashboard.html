@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Advanced Dashboard 🚀</h2>
+
+<!-- 🔹 CARDS -->
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="card shadow p-3 mb-3">
+            <h5>Total Products</h5>
+            <h3>{{ total_products }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow p-3 mb-3">
+            <h5>Total Sales</h5>
+            <h3>₹ {{ total_sales }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow p-3 mb-3">
+            <h5>Prediction 🤖</h5>
+            <h3>₹ {{ predicted_sales }}</h3>
+        </div>
+    </div>
+
+</div>
+
+<hr>
+
+<!-- 🔹 LINE CHART -->
+<h4>Monthly Sales Trend 📈</h4>
+<canvas id="lineChart"></canvas>
+
+<hr>
+
+<!-- 🔹 SCATTER CHART -->
+<h4>Price vs Quantity (Dependency)</h4>
+<canvas id="scatterChart"></canvas>
+
+<hr>
+
+<!-- 🔹 ALERTS -->
+<div class="card p-3 mt-3 border-danger">
+    <h5>Alerts 🚨</h5>
+
+    {% if alerts %}
+        {% for alert in alerts %}
+            <p style="color:red;">{{ alert }}</p>
+        {% endfor %}
+    {% else %}
+        <p>No alerts</p>
+    {% endif %}
+</div>
+
+<!-- 🔹 INSIGHT -->
+<div class="card p-3 mt-3 border-info">
+    <h5>Data Insight 🔍</h5>
+    <p>{{ insight }}</p>
+    <p><strong>Correlation:</strong> {{ correlation }}</p>
+</div>
+
+<!-- 🔹 RECOMMENDATIONS -->
+<div class="card p-3 mt-3 border-success">
+    <h5>AI Recommendations 🤖</h5>
+
+    {% if recommendations %}
+        {% for rec in recommendations %}
+            <p>{{ rec }}</p>
+        {% endfor %}
+    {% else %}
+        <p>No recommendations available</p>
+    {% endif %}
+</div>
+
+<!-- 🔹 CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // 🔥 SAFE DATA PARSING
+    const months = JSON.parse('{{ months_json|escapejs }}');
+    const salesData = JSON.parse('{{ sales_json|escapejs }}');
+    const scatterData = JSON.parse('{{ scatter_json|escapejs }}');
+
+    // 📈 LINE CHART
+    new Chart(document.getElementById("lineChart"), {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Sales',
+                data: salesData,
+                borderWidth: 2
+            }]
+        }
+    });
+
+    // 🔥 SCATTER CHART
+    new Chart(document.getElementById("scatterChart"), {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Price vs Quantity',
+                data: scatterData
+            }]
+        }
+    });
+</script>
+
+{% endblock %}
